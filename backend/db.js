@@ -1,4 +1,6 @@
-import mongoose, { Schema } from "mongoose";
+const mongoose = require("mongoose");
+
+const { Schema } = mongoose;
 
 mongoose.connect(
   "mongodb+srv://himani:fSKP1zLzZqXtMshG@cluster0.ujlkouj.mongodb.net/paytmDb"
