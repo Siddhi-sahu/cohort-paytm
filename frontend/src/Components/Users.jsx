@@ -1,28 +1,37 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "./Button";
+import axios from "axios";
 
 export const Users = () => {
-  const [users, setUsers] = useState([
-    {
-      firstName: "Siddhi",
-      lastName: "Sahu",
-      _id: 1,
-    },
-  ]);
+  // Replace with backend call
+  const [users, setUsers] = useState([]);
+  const [filter, setFilter] = useState("");
 
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/api/v1/user/bulk?filter=" + filter)
+      .then((response) => {
+        setUsers(response.data.user);
+      });
+  }, [filter]);
+
+  //todo::add logic to make sure you dont see yourself
   return (
     <>
       <div className="font-bold mt-6 text-lg">Users</div>
       <div className="my-2">
         <input
+          onChange={(e) => {
+            setFilter(e.target.value);
+          }}
           type="text"
           placeholder="Search users..."
           className="w-full px-2 py-1 border rounded border-slate-200"
-        />
+        ></input>
       </div>
       <div>
         {users.map((user) => (
-          <Users user={user} />
+          <User user={user} />
         ))}
       </div>
     </>
@@ -38,13 +47,14 @@ function User({ user }) {
             {user.firstName[0]}
           </div>
         </div>
-        <div className="flex flex-col justify-center h-full">
+        <div className="flex flex-col justify-center h-ful">
           <div>
             {user.firstName} {user.lastName}
           </div>
         </div>
       </div>
-      <div className="flex flex-col justify-center h-full">
+
+      <div className="flex flex-col justify-center h-ful">
         <Button label={"Send Money"} />
       </div>
     </div>
