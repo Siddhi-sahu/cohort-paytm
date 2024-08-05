@@ -2,11 +2,28 @@ import { useEffect, useState } from "react";
 import Button from "./Button";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 export const Users = () => {
   // Replace with backend call
   const [users, setUsers] = useState([]);
   const [filter, setFilter] = useState("");
+  const [currentUserId, setCurrentUserId] = useState(null);
+
+  //todo::add logic to make sure you dont see yourself
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      const decodedToken = jwtDecode(token);
+      if (decodedToken.userId) {
+        setCurrentUserId(decodedToken.userId);
+      } else {
+        console.log("no userid in decoded token");
+      }
+    }
+  }, []);
 
   useEffect(() => {
     axios
@@ -16,7 +33,8 @@ export const Users = () => {
       });
   }, [filter]);
 
-  //todo::add logic to make sure you dont see yourself
+  const filteredUsers = users.filter((user) => user._id !== currentUserId);
+
   return (
     <>
       <div className="font-bold mt-6 text-lg">Users</div>
@@ -31,8 +49,8 @@ export const Users = () => {
         ></input>
       </div>
       <div>
-        {users.map((user) => (
-          <User user={user} />
+        {filteredUsers.map((user) => (
+          <User key={user._id} user={user} />
         ))}
       </div>
     </>
