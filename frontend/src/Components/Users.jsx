@@ -26,8 +26,9 @@ export const Users = () => {
   }, []);
 
   useEffect(() => {
+    const encodedFilter = encodeURIComponent(filter.trim());
     axios
-      .get("http://localhost:3000/api/v1/user/bulk?filter=" + filter)
+      .get(`http://localhost:3000/api/v1/user/bulk?filter=${encodedFilter}`)
       .then((response) => {
         setUsers(response.data.user);
       });
